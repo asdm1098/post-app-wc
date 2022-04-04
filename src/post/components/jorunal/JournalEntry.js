@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { activePost } from '../../redux/actions/notes';
 
 
-export const JournalEntry = ( {id, idWako, date, title, body, url} ) => {
+export const JournalEntry = ( {id, date, title, body, url} ) => {
     
     //console.log(id, date, title, body, url);
     const dispatch = useDispatch();
@@ -15,7 +15,7 @@ export const JournalEntry = ( {id, idWako, date, title, body, url} ) => {
     const handleEntryClick = () => {
         //dispatch activePost
         dispatch( activePost( id, {
-            idWako,title, body, date, url
+            title, body, date, url
             })
         );
 
