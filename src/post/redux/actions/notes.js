@@ -40,21 +40,21 @@ export const startNewNote = () => {
             .then(function(response){return response.json();})
             .then(response => {
                 console.log(response.data);
-                const postW = {
-                    idWaco: response.data.id,
-                    title: response.data.title,
-                    body: response.data.body,
-                    link: response.data.link,
-                }
+                // const postW = {
+                //     idWaco: response.data.id,
+                //     title: response.data.title,
+                //     body: response.data.body,
+                //     link: response.data.link,
+                // }
 
-                dispatch( activePost( doc.id,  postW ));
-                //activar nota creada
-                dispatch( addNewNote( doc.id, postW ));  
             })
             .catch((error) => {
                 console.log('error: ', error);
             });
-
+            
+            dispatch( activePost( doc.id,  newPost ));
+            //activar nota creada
+            dispatch( addNewNote( doc.id, newPost ));  
 
         } catch (error) {
             console.log(error);
