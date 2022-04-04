@@ -26,32 +26,6 @@ const firebaseConfig = {
 
   //variable de entorno verlas
  // console.log(process.env);
-
-/*
-const firebaseConfigTesting = {
-    apiKey: "AIzaSyBCsdKUJ-5CMGU3XMQDUzeRSqDjV_9hR30",
-    authDomain: "redux-demo-pruebas.firebaseapp.com",
-    databaseURL: "https://redux-demo-pruebas.firebaseio.com",
-    projectId: "redux-demo-pruebas",
-    storageBucket: "redux-demo-pruebas.appspot.com",
-    messagingSenderId: "723814828715",
-    appId: "1:723814828715:web:cff66e4ffa1c18e06545ee"
-  };
-
-  if ( process.env.NODE_ENV === 'test' ) {
-      //testing
-      firebase.initializeApp(firebaseConfigTesting);
-
-  } else {
-      //dev/prod
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-  };
-
-*/
-  //Para grabar información y google Auth Provider
-  
-  
   
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore(); 
