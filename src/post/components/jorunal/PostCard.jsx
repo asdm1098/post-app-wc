@@ -1,17 +1,19 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { setActivePost, startDeletingPost } from '../../redux/actions/posts';
+import { useSelector, useDispatch} from 'react-redux';
+import { setActivePost, startDeleting, startDeletingPost } from '../../redux/actions/posts';
 
 import './styles.css';
 
 export const PostCard = (props) => {
     const dispatch = useDispatch();
+    const { favorites } = useSelector(state => state.posts);
+
     const { post, idx, favoritos, updateFavoritePost, handleOpen } = props;
     const { title, body } = post;
-    const redHeart = "❤️";
     const blackHeart = "🖤";
-    const edit = "✍";
     const delet = "❌"
+    const edit = "✍";
+    const redHeart = "❤️";
    
     const heart = favoritos.includes(post) ? redHeart : blackHeart;
     
@@ -22,16 +24,25 @@ export const PostCard = (props) => {
     };
 
     const handleEdit = () => {
-        console.log('click editar: ', post);
         dispatch( setActivePost(post));
         handleOpen();
     }
 
     const handleDelete = () => {
-        console.log('click eliminar: ', post);
-        dispatch( startDeletingPost(post?.id) );
+        dispatch(startDeleting(post))
+        // const deleted = [...favorites];
+        // console.log(post);
+        // const isFavorite = deleted.findIndex( p => p.idWako === post.id);
+        // if ( isFavorite >= 0 ) {
+        //     let fav = favorites[isFavorite];
+        //     dispatch( startDeletingPost(fav.idWako));
+        //     dispatch( startDeleting(post.id));
+        // }else{
+        //     dispatch( startDeletingPost(post.id));
+        //     dispatch( startDeleting(post.id));
+        // }
+       
     }
-
 
   return (
       
@@ -63,8 +74,6 @@ export const PostCard = (props) => {
                 </div>
             </div>
             </div>
-            
     </div>
-    
   )
 }

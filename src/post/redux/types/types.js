@@ -28,5 +28,8 @@ export const types = {
     postActiv: '[Posts] Set active post',
     postUpdated: '[Posts] Updated post',
     postDelete: '[Posts] Delete post',
-    postDeleteFavorite: '[Post Favorite] delete post'
+    postDeleteFavorite: '[Post Favorite] delete post',
+    postAddFavorite: '[ Post favorite ] add post',
+    favoriteUpdated: '[ Post favorite] favorite updated',
+    deleteFavorite: '[ Post favorite] favorite deleted'
 }

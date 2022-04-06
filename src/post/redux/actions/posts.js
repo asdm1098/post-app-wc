@@ -1,8 +1,7 @@
-import Swal from 'sweetalert2';
 import { db } from '../../../config/firebase-config';
+import { finishLoading, startLoading } from "./ui";
 import { loadFavoritesPost, loadPosts } from "../../../utils/loadPosts";
 import { types } from "../types/types";
-import { finishLoading, startLoading } from "./ui";
 
 //cargar notas, función asincrona
 export const startLoadingPost = (uid) => {
@@ -12,9 +11,8 @@ export const startLoadingPost = (uid) => {
         try {
             const posts = await loadPosts();
             const favorites = await loadFavoritesPost(uid);
-            console.log(favorites);
             dispatch( setPots( posts.data ) );
-            // dispatch( updateFavoritesPosts(favorites))
+            dispatch( updateFavoritesPosts(favorites));
         } catch (error) {
             console.log('error al traer post de Api: ', error);
         }
@@ -23,10 +21,34 @@ export const startLoadingPost = (uid) => {
     }
 }
 
+export const startDeleting = ( post ) => {
+    const {idWako} = post;
+    console.log('idWako: ', idWako);
+    return async (dispatch, getSate ) => {
+        const uid = getSate().auth.uid;
+
+        if (idWako) {
+            await fetch(`https://waco-api.herokuapp.com/api/posts/${idWako}`, {
+                method: 'DELETE',headers:{'Content-Type': 'application/json'}
+            })
+            await db.doc(`${ uid }/posts/favorites/${ post.id  }`).delete();
+            dispatch( deletePost(idWako));
+            dispatch( deleteFavorite(post.id))
+        }else{
+            await fetch(`https://waco-api.herokuapp.com/api/posts/${post.id}`, {
+                method: 'DELETE',headers:{'Content-Type': 'application/json'}
+            })
+            dispatch( deletePost(post.id));
+
+        }
+    }
+}
+
 export const startDeletingPost = ( id ) => {
+    console.log('starttttthjoppp')
     return async ( dispatch, getState) => {
-        const uid = getState().auth.uid;
-        await db.doc(`${ uid }/posts/favorites/${ id  }`).delete();
+        // const uid = getState().auth.uid;
+        // await db.doc(`${ uid }/posts/favorites/${ id  }`).delete();
         try {
             await fetch(`https://waco-api.herokuapp.com/api/posts/${id}`, {
                 method: 'DELETE',
@@ -46,13 +68,11 @@ export const startDeletingPost = ( id ) => {
 }
 
 export const startSavePost = ( post ) => {
-    return async ( dispatch, getState ) => {
-        const {uid} = getState().auth;
-
+    const { idWako } = post;
+    return async ( dispatch ) => {
         try {
-            await db.collection(`${ uid }/posts/favorites`).add( post );
 
-            await fetch(`https://waco-api.herokuapp.com/api/posts/${post.id}`, {
+            await fetch(`https://waco-api.herokuapp.com/api/posts/${idWako ? idWako : post.id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
                     "title": post.title,
@@ -70,13 +90,49 @@ export const startSavePost = ( post ) => {
             console.log('error al actualizar nota: ', error);
         }
 
-        const postToFirestore = { ...post };
-        delete postToFirestore.id;
+        if (!idWako) {
+            const postToFirestore = { ...post };
+            delete postToFirestore.id;
+    
+            //acción que actualiza
+            dispatch( refreshPost( post.id, postToFirestore ));
+        }else{
+            const postToFirestore = { ...post };
+            delete postToFirestore.idWako;
+    
+            //acción que actualiza
+            dispatch( refreshPost( post.idWako, postToFirestore ));
+            dispatch( refreshFavorite( post.id, postToFirestore ));
 
-        //acción que actualiza
-        dispatch( refreshPost( post.id, postToFirestore ));
+        }
     }
 }
+
+export const startUpdateFavorite = ( post ) => {
+    return async ( dispatch, getState ) => {
+
+        const { uid } = getState().auth;
+
+        const favoriteToFirestore = { ...post };
+        delete favoriteToFirestore.id;
+
+        await db.doc(`${ uid }/posts/favorites/${ post.id }`).update( favoriteToFirestore );
+
+        //acción que actualiza
+        dispatch( refreshFavorite( post.id, favoriteToFirestore ));
+    }
+}
+
+const refreshFavorite = (id, post) => ({
+    type: types.favoriteUpdated,
+    payload: {
+       id, 
+        post: {
+           id,
+            ...post
+        }
+    }
+})
 
 export const refreshPost = ( id, post ) => ({
     type: types.postUpdated,
@@ -94,7 +150,40 @@ export const deletePost = (id) => ({
     payload: id
 });
 
-//Grabar notas obtenidas de firestore en nuestro store
+const deleteFavorite = (id) => ({
+    type: types.deleteFavorite,
+    payload: id
+});
+
+export const startSaveFavorite = (post) => {
+
+    return async ( dispatch, getState ) => {
+        
+        const {uid} = getState().auth;
+
+        const favorite = {
+            idWako: post.id,
+            title: post.title,
+            body: post.body,
+        }
+        console.log(favorite)
+
+        try {
+            const doc = await db.collection(`${ uid }/posts/favorites`).add( favorite ); 
+            dispatch(addNewFavorite( doc.id, favorite));
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+}
+const addNewFavorite =( id, post ) => ({
+    type: types.postAddFavorite,
+    payload: {
+        id, ...post
+    }
+})
+//Grabar notas y posts obtenidas de firestore en nuestro store
 export const setPots = ( posts ) => ({
     type: types.postsLoad,
     payload: posts 

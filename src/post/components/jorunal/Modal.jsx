@@ -5,7 +5,7 @@ import { Box, Button, TextField, Modal, TextareaAutosize  } from '@mui/material'
 
 import { useForm } from '../../hook/useForm';
 import { activePost } from '../../redux/actions/notes';
-import { startSavePost } from '../../redux/actions/posts';
+import { startSavePost, startUpdateFavorite } from '../../redux/actions/posts';
 
 const style = {
     position: 'absolute',
@@ -23,8 +23,7 @@ const style = {
 
 
 export const ModalEdit = ({ open, handleClose }) =>  {
-    const { active } = useSelector(state => state.posts);
-    // const { title, body } = active;
+    const { active, favorites } = useSelector(state => state.posts);
     const [ formValues, handleInputChange, reset ] = useForm(active);
     const { id, title, body } = formValues;
 
@@ -45,7 +44,18 @@ export const ModalEdit = ({ open, handleClose }) =>  {
     }, [formValues, dispatch])
 
     const handleSave = async() => {
-        console.log(id, title, body);
+        const updated = [...favorites];
+        const isFavorite = updated.findIndex( p => p.idWako === id);
+        if (isFavorite >= 0) {
+            let fav = favorites[isFavorite];
+            const updated = {
+                id: fav.id,
+                idWako: id,
+                title,
+                body
+            }
+            dispatch(startUpdateFavorite(updated));
+        }
         dispatch( startSavePost(active) );
         handleClose();
     }

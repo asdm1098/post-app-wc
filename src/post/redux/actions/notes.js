@@ -4,8 +4,6 @@ import { db } from '../../../config/firebase-config';
 import { loadNotes } from '../../../utils/loadNotes';
 import { fileUpload } from '../../../utils/fileUpload';
 
-//react-journal
-
 
 //Tarea asíncrona, crear nueva nota
 export const startNewNote = () => {
@@ -20,36 +18,9 @@ export const startNewNote = () => {
             date: new Date().getTime()
         }
 
-        const post = {
-            "title": "title",
-            "body": "body",
-            "user_uuid": uid,
-        }
-        
-
         try {
             const doc = await db.collection(`${ uid }/collection/posts`).add( newPost );
-            
-            fetch('https://waco-api.herokuapp.com/api/posts', {
-                method: 'POST', 
-                body: JSON.stringify(post), 
-                headers:{ 'Content-Type': 'application/json' }
-            })
-            .then(function(response){return response.json();})
-            .then(response => {
-                console.log(response.data);
-                // const postW = {
-                //     idWaco: response.data.id,
-                //     title: response.data.title,
-                //     body: response.data.body,
-                //     link: response.data.link,
-                // }
 
-            })
-            .catch((error) => {
-                console.log('error: ', error);
-            });
-            
             dispatch( activePost( doc.id,  newPost ));
             //activar nota creada
             dispatch( addNewNote( doc.id, newPost ));  
@@ -78,7 +49,6 @@ export const activePost = ( id, post ) => ({
     }
 });
 
-
 //cargar notas, función asincrona
 export const startLoadingNotes = ( uid ) => {
     return async ( dispatch ) => {
@@ -89,13 +59,11 @@ export const startLoadingNotes = ( uid ) => {
     }
 }
 
-
 //Grabar notas obtenidas de firestore en nuestro store
 export const setNotes = ( notes ) => ({
     type: types.notesLoad,
     payload: notes 
 });
-
 
 //Grabar en la base de datos los cambios de la nota activa, firestore 
 //tarea asíncrona
@@ -118,7 +86,6 @@ export const startSaveNote = ( note ) => {
         Swal.fire('Saved', note.title, 'success');
     }
 }
-
 
 //Actualizar únicamente la nota que cambio en el store, la que se actualizo
 export const refreshNote = ( id, note ) => ({

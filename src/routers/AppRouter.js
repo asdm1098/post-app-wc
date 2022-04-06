@@ -44,7 +44,7 @@ export const AppRouter = () => {
 
                 //función regreso notes y posts
                 dispatch( startLoadingNotes( user.uid ) );
-                dispatch( startLoadingPost( user.uid ))
+                dispatch( startLoadingPost( user.uid ));
             } else {
                 setIsLoggedIn( false );
             }

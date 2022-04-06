@@ -22,6 +22,12 @@ export const postsReducer = ( state = initialState, action ) => {
             favorites: [ ...action.payload ]
         }
 
+    case types.postAddFavorite:
+        return {
+            ...state,
+            favorites: [ action.payload, ...state.favorites ]
+        }
+
     case types.postActiv:
         return {
             ...state,
@@ -37,7 +43,12 @@ export const postsReducer = ( state = initialState, action ) => {
                 post => post.id === action.payload.id
                     ? action.payload.post
                     : post
-            ),
+            )
+        }
+    
+    case types.favoriteUpdated:
+        return {
+            ...state,
             favorites: state.favorites.map(
                 fav => fav.id === action.payload.id
                     ? action.payload.post
@@ -50,8 +61,16 @@ export const postsReducer = ( state = initialState, action ) => {
             ...state,
             active: null,
             posts: state.posts.filter( post => post.id !== action.payload ),
+            // favorites: state.favorites.filter( fav => fav.id !== action.payload )
+        }
+
+    case types.deleteFavorite:
+        return {
+            ...state,
+            active: null,
             favorites: state.favorites.filter( fav => fav.id !== action.payload )
         }
+
     default:
         return state;
   }
