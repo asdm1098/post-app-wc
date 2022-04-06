@@ -19,4 +19,14 @@ export const types = {
     notesFileUrl: '[Posts] Updated image url',
     notesDelete: '[Posts] Delete post',
     notesLogoutCleaning: '[Posts] Logout Cleaning',
+
+
+
+    //POSTSSS
+    postsLoad: '[Posts] Load Posts Api',
+    postFavorites: '[Posts] UpdatePostFavorites',
+    postActiv: '[Posts] Set active post',
+    postUpdated: '[Posts] Updated post',
+    postDelete: '[Posts] Delete post',
+    postDeleteFavorite: '[Post Favorite] delete post'
 }

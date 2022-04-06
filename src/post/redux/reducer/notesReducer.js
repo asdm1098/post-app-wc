@@ -24,7 +24,7 @@ const initialState = {
     active: null
 }
 
-export const postsReducer = ( state = initialState, action ) => {
+export const notesReducer = ( state = initialState, action ) => {
 
     switch (action.type) {
         

@@ -20,6 +20,7 @@ import { PostsRoutes } from '../post/routes/PostsRoutes';
 import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRoute';
 import { startLoadingNotes } from '../post/redux/actions/notes';
+import { startLoadingPost } from '../post/redux/actions/posts';
 
 export const AppRouter = () => {
     
@@ -41,9 +42,9 @@ export const AppRouter = () => {
                 dispatch( login( user.uid, user.displayName ) );
                 setIsLoggedIn( true );
 
-                //función regreso notes
+                //función regreso notes y posts
                 dispatch( startLoadingNotes( user.uid ) );
-
+                dispatch( startLoadingPost( user.uid ))
             } else {
                 setIsLoggedIn( false );
             }

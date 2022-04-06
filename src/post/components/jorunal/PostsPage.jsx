@@ -1,60 +1,82 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { CssBaseline } from '@mui/material';
 
-import moment from 'moment';
-import { useDispatch } from 'react-redux';
-import { activePost } from '../../redux/actions/notes';
+import { startDeletingPost, startLoadingPost, startSavePost, updateFavoritesPosts } from '../../redux/actions/posts';
+import { PostCard } from './PostCard';
+import { ModalEdit } from './Modal';
+
+import './styles.css';
 
 export const PostsPage = () => {
-
-  const { notes: posts } = useSelector(state => state.notes);
-
+    
+  const { location } = useHistory();
   const dispatch = useDispatch();
+  const { posts, favorites  } = useSelector(state => state.posts);
+  
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpen = () => setOpenModal(true);
+  const handleClose = () => setOpenModal(false);
+  
+    useEffect(() => {
+        dispatch( startLoadingPost() );
+    }, [dispatch]);
 
+    
+    useEffect(() => {
+        console.log('favoritos: ', favorites);
+    }, [favorites]);
 
-   const handleEntryClick = (id, date, title, body, url) => {
-       //dispatch activePost
-       dispatch( activePost( id, {
-           title, body, date, url
-        })
-       );
-
-    }
-  return (
-    <div>
-        {
-            posts.map( ({id, date, title, body, url}) => (
-                <div 
-                    onClick = { () => handleEntryClick(id, date, title, body, url) }
-                    key={id}
-                >
-                    {
-                         url && //si url es diferente de undefined
-                         <div 
-                             className="journal__entry-picture"
-                             style={{
-                                 backgroundSize: 'cover',
-                                 backgroundImage: `url(${ url })`
-                             }}
-                         ></div>
-                    }
-                    {/*Contenedor del texto y otras cosas... */}
-                    <div className="journal__entry-body">
-                        <p className="journal__entry-title">
-                            { title }
-                        </p>
-                        <p className="journal__entry-content">
-                            { body }
-                        </p>
-                    </div>
-                    {/*Para la fecha */}
-                    <div className="journal__entry-date-box">
-                        <span>{ moment(date).format('dddd') }</span>
-                        <h4>{ moment(date).format('Do') }</h4>
-                    </div>
-                </div>
-            ))
+    const updateFavoritePost = (post) => {
+        const updated = [...favorites];
+        const isFavorite = updated.findIndex( p => p.id === post.id);
+         if (isFavorite >= 0) {
+            updated.splice(isFavorite, 1);
+            dispatch(startDeletingPost(post.id));
+        } else {
+            updated.push(post);
+            dispatch(startSavePost(post));
         }
-    </div>
+        dispatch(updateFavoritesPosts(updated));
+    }
+
+  return (
+    <>
+        { (openModal)&& 
+           <ModalEdit open={openModal} handleOpen={handleOpen} handleClose={handleClose} />
+        }
+        <CssBaseline />
+        <div className="post-grid"> 
+            {
+                (location.pathname.includes('posts')) ?
+                    posts.map( (post, idx) => {
+                        return(
+                            <PostCard 
+                                post={post} 
+                                key={post?.id} 
+                                idx={idx} 
+                                favoritos={favorites}
+                                updateFavoritePost={updateFavoritePost}
+                                handleOpen={handleOpen}
+                            />
+                        )
+                    })
+                    : 
+                    favorites.map( (post, idx) => {
+                        return(
+                            <PostCard 
+                                post={post} 
+                                key={post?.id} 
+                                idx={idx} 
+                                favoritos={favorites}
+                                updateFavoritePost={updateFavoritePost}
+                                handleOpen={handleOpen} 
+                            />
+                        )
+                    })
+            }
+        </div>  
+    </>
   )
 }

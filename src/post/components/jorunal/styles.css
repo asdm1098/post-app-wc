@@ -1,0 +1,93 @@
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 18px;
+    padding: 0px 10px 20px 10px;
+    margin-top: 20px;
+  }
+  
+  .post-card {
+    display: flex;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+  }
+
+  .post-img-container {
+    padding: 0px 5px;
+  }
+
+  .post-img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 10px 10px 10px;
+    flex: 1;
+  }
+
+  .card-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-top h3 {
+    text-transform: capitalize;
+  }
+
+  .card-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .post-type {
+    display: flex;
+    /* border: 1px solid blue; */
+    color: black;
+  }
+  
+  .post-type-text {
+    margin-right: 10px;
+    text-transform: capitalize;
+    border-radius: 5px;
+    width: 190px;
+    padding: 4px;
+    text-align: center;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+  }
+
+  .post-heart-btn {
+    border: none;
+    background-color: #f0f0f0;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.25);
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+
+  @media screen and (max-width: 992px) {
+    .post-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media screen and (max-width: 600px) {
+    .post-grid {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  
+

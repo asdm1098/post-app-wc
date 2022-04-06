@@ -1,7 +1,8 @@
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
 import { authReducer } from '../post/redux/reducer/authReducer';
-import { postsReducer } from '../post/redux/reducer/notesReducer';
+import { notesReducer } from '../post/redux/reducer/notesReducer';
+import { postsReducer } from '../post/redux/reducer/postsReducer';
 import { uiReducer } from '../post/redux/reducer/uiReducer';
 
 
@@ -13,7 +14,8 @@ const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOO
 const reducers = combineReducers({
     auth: authReducer,
     ui: uiReducer,
-    notes: postsReducer
+    notes: notesReducer,
+    posts: postsReducer
 })
 
 //Configuración para trabajar acciones asíncronas en nuestra aplicación
