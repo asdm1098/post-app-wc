@@ -1,12 +1,11 @@
 import React from 'react';
-import { useSelector, useDispatch} from 'react-redux';
-import { setActivePost, startDeleting, startDeletingPost } from '../../redux/actions/posts';
+import { useDispatch } from 'react-redux';
+import { setActivePost, startDeleting } from '../../redux/actions/posts';
 
 import './styles.css';
 
 export const PostCard = (props) => {
     const dispatch = useDispatch();
-    const { favorites } = useSelector(state => state.posts);
 
     const { post, idx, favoritos, updateFavoritePost, handleOpen } = props;
     const { title, body } = post;
@@ -30,18 +29,6 @@ export const PostCard = (props) => {
 
     const handleDelete = () => {
         dispatch(startDeleting(post))
-        // const deleted = [...favorites];
-        // console.log(post);
-        // const isFavorite = deleted.findIndex( p => p.idWako === post.id);
-        // if ( isFavorite >= 0 ) {
-        //     let fav = favorites[isFavorite];
-        //     dispatch( startDeletingPost(fav.idWako));
-        //     dispatch( startDeleting(post.id));
-        // }else{
-        //     dispatch( startDeletingPost(post.id));
-        //     dispatch( startDeleting(post.id));
-        // }
-       
     }
 
   return (

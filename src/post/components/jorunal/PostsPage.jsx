@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 
-import { startSaveFavorite } from '../../redux/actions/posts';
+import { deleteFavFire, startSaveFavorite, updateFavoritesPosts } from '../../redux/actions/posts';
 import { PostCard } from './PostCard';
 import { ModalEdit } from './Modal';
 
@@ -20,17 +20,28 @@ export const PostsPage = () => {
     const handleClose = () => setOpenModal(false);
 
     const updateFavoritePost = (post) => {
-        dispatch(startSaveFavorite(post));
-        // const updated = [...favorites];
-        // const isFavorite = updated.findIndex( p => p.id === post.id);
-        //  if (isFavorite >= 0) {
-        //     updated.splice(isFavorite, 1);
-        //     dispatch(startDeletingPost(post.id));
-        // } else {
-        //     updated.push(post);
-        //     dispatch(startSavePost(post));
-        // }
-        // dispatch(updateFavoritesPosts(updated));
+        const { idWako } = post;
+        
+        const updated = [...favorites];
+        if (!idWako) {
+            const isFavorite = updated.findIndex( p => p.idWako === post.id);
+             if (isFavorite >= 0) {
+                let fav = updated[isFavorite];
+                dispatch(deleteFavFire(fav.id))
+    
+            } else {
+                dispatch(startSaveFavorite(post));
+            }
+        }else{
+            const isFavorite = updated.findIndex( p => p.idWako === idWako);
+            if (isFavorite >= 0) {
+               let fav = updated[isFavorite];
+               dispatch(deleteFavFire(fav.id))
+   
+           } else {
+               dispatch(startSaveFavorite(post));
+           }
+        }
     }
 
   return (

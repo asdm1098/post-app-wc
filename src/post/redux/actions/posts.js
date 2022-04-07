@@ -23,7 +23,6 @@ export const startLoadingPost = (uid) => {
 
 export const startDeleting = ( post ) => {
     const {idWako} = post;
-    console.log('idWako: ', idWako);
     return async (dispatch, getSate ) => {
         const uid = getSate().auth.uid;
 
@@ -44,11 +43,18 @@ export const startDeleting = ( post ) => {
     }
 }
 
+export const deleteFavFire = ( id ) => {
+    return async ( dispatch, getState ) => {
+        //borrar de firestore
+        const uid = getState().auth.uid;
+        await db.doc(`${ uid }/posts/favorites/${ id  }`).delete();
+        //borrar del store
+        dispatch( deleteFavorite(id))
+    }
+}
+
 export const startDeletingPost = ( id ) => {
-    console.log('starttttthjoppp')
-    return async ( dispatch, getState) => {
-        // const uid = getState().auth.uid;
-        // await db.doc(`${ uid }/posts/favorites/${ id  }`).delete();
+    return async ( dispatch) => {
         try {
             await fetch(`https://waco-api.herokuapp.com/api/posts/${id}`, {
                 method: 'DELETE',
@@ -57,7 +63,6 @@ export const startDeletingPost = ( id ) => {
                 }
             }).then(resp => resp.json())
               .then((resp) => {
-                  console.log('eliminado: ', resp);
                   dispatch( deletePost(id));
               })
         } catch (error) {
@@ -166,7 +171,6 @@ export const startSaveFavorite = (post) => {
             title: post.title,
             body: post.body,
         }
-        console.log(favorite)
 
         try {
             const doc = await db.collection(`${ uid }/posts/favorites`).add( favorite ); 
