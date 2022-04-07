@@ -33,6 +33,7 @@ export const Navbar = ( props ) => {
     const classes = useStyles()
 
     const handleLogout = () => {
+        console.log('salirrr')
         dispatch( startLogout() );
     }
 
